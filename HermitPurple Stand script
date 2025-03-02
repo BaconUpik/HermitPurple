@@ -27,7 +27,7 @@ local function update()
 	r15A = me.Character:FindFirstChild("RightHand")
 	r6La = me.Character:FindFirstChild("Left Arm")
 	r15La = me.Character:FindFirstChild("LeftHand")
-	
+
 	r6At = me.Character:FindFirstChild("RightGripAttachment")
 end
 
@@ -38,8 +38,8 @@ if me.Character then
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification",{
-    Title = "Hermit Purple",
-    Text  = "Q = summon/desummon\nHold E = grapple/Unhold E = ungrapple"
+	Title = "Hermit Purple",
+	Text  = "Q = summon/desummon\nHold E = grapple/Unhold E = ungrapple\nWarning! Script is NOT FE"
 })
 
 local ifR6 = false
@@ -70,10 +70,10 @@ end
 
 local function between(v0,v1)
 	local different = v0 - v1
-	
+
 	local distance = different.Magnitude
 	distance = math.floor(distance / 1 + 0.5) * 1
-	
+
 	return distance
 end
 
@@ -227,10 +227,10 @@ end)
 
 uis.InputEnded:Connect(function(i,g)
 	if g then return end
-	
+
 	if i.KeyCode == Enum.KeyCode.E then
 		keyHold = true
-		
+
 		con = false
 		if hook then
 			hook:Destroy()
