@@ -132,7 +132,7 @@ uis.InputBegan:Connect(function(i,g)
 				local ifBe = (hrp.Position - mPos).Magnitude
 				local distance = between(mPos, hrp.Position)
 
-				if ifBe <= getgenv().MaxHermitDistance or max then
+				if ifBe <= getgenv().MaxHermitDistance then
 
 					hook = Instance.new("Part")
 					hook.Anchored = true
