@@ -1,0 +1,245 @@
+local plr = game:GetService("Players")
+local me  = plr.LocalPlayer
+local hum = me.Character:WaitForChild("Humanoid")
+local hrp = me.Character:WaitForChild("HumanoidRootPart")
+
+local r6A = me.Character:FindFirstChild("Right Arm")
+local r15A = me.Character:FindFirstChild("RightHand")
+local r6La = me.Character:FindFirstChild("Left Arm")
+local r15La = me.Character:FindFirstChild("LeftHand")
+
+local r6At = me.Character:FindFirstChild("RightGripAttachment")
+
+local work = game:GetService("Workspace")
+local run = game:GetService("RunService")
+local uis = game:GetService("UserInputService")
+local virtual = game:GetService("VirtualInputManager")
+local rep = game:GetService("ReplicatedStorage")
+
+local mouse = me:GetMouse()
+local camera = work.CurrentCamera
+
+local function update()
+	hum = me.Character:WaitForChild("Humanoid")
+	hrp = me.Character:WaitForChild("HumanoidRootPart")
+
+	r6A = me.Character:FindFirstChild("Right Arm")
+	r15A = me.Character:FindFirstChild("RightHand")
+	r6La = me.Character:FindFirstChild("Left Arm")
+	r15La = me.Character:FindFirstChild("LeftHand")
+	
+	r6At = me.Character:FindFirstChild("RightGripAttachment")
+end
+
+me.CharacterAdded:Connect(update)
+
+if me.Character then
+	update()
+end
+
+game:GetService("StarterGui"):SetCore("SendNotification",{
+    Title = "Hermit Purple",
+    Text  = "Q = summon/desummon\nHold E = grapple/Unhold E = ungrapple"
+})
+
+local ifR6 = false
+
+if hum.RigType == Enum.HumanoidRigType.R6 then
+	ifR6 = true
+else
+	ifR6 = false
+end
+
+local keyHold = true
+local con = true
+local hook
+local bmw
+local rope
+
+local hermit
+
+local summoned = false
+
+local max = 200
+
+local function attach(parent)
+	local att = Instance.new("Attachment")
+	att.Name = "att"
+	att.Parent = parent
+end
+
+local function between(v0,v1)
+	local different = v0 - v1
+	
+	local distance = different.Magnitude
+	distance = math.floor(distance / 1 + 0.5) * 1
+	
+	return distance
+end
+
+local function summon(method,parent)
+	if method == "create" then
+		hermit = Instance.new("ParticleEmitter")
+		hermit.Parent = parent
+		hermit.Name = "Hermit"
+		hermit.Rate = 80
+		hermit.Lifetime = NumberRange.new(1, 3)
+		hermit.Size = NumberSequence.new(0.5, 1)
+		hermit.Speed = NumberRange.new(1,2)
+		hermit.Color = ColorSequence.new(Color3.fromRGB(183, 0, 255))
+		hermit.Transparency = NumberSequence.new(0.5, 1)
+		hermit.Rotation = NumberRange.new(0, 360)
+		hermit.Enabled = true
+	elseif method == "destroy" then
+		if parent:FindFirstChild("Hermit") then
+			parent.Hermit:Destroy()
+		end
+	end
+end
+
+wait(0.3)
+
+uis.InputBegan:Connect(function(i,g)
+	if g then return end
+
+	if i.KeyCode == Enum.KeyCode.Q then
+		summoned = not summoned
+		if summoned then
+			if ifR6 then
+				summon("create", r6A)
+				summon("create", r6La)
+			else
+				summon("create", r15A)
+				summon("create", r15La)
+			end
+		else
+			if ifR6 then
+				summon("destroy", r6A)
+				summon("destroy", r6La)
+			else
+				summon("destroy", r15A)
+				summon("destroy", r15La)
+			end
+		end
+	elseif i.KeyCode == Enum.KeyCode.E and keyHold then
+		keyHold = false
+		if summoned then
+			if ifR6 then
+				con = true
+
+				local mPos = mouse.Hit.p
+
+				local ifBe = (hrp.Position - mPos).Magnitude
+				local distance = between(mPos, hrp.Position)
+
+				if ifBe <= getgenv().MaxHermitDistance or max then
+
+					hook = Instance.new("Part")
+					hook.Anchored = true
+					hook.CanCollide = false
+					hook.Transparency = 1
+					hook.Position = mPos
+					hook.Parent = work
+
+					bmw = Instance.new("BodyVelocity")
+					bmw.Velocity = Vector3.new(0,0,0)
+					bmw.MaxForce = Vector3.new(100000,100000,100000)
+					bmw.Parent = hrp
+
+					attach(r6A)
+					attach(hook)
+
+					rope = Instance.new("RopeConstraint")
+					rope.Parent = hook
+					rope.Attachment0 = hook.att
+					rope.Attachment1 = r6A.att
+					rope.WinchEnabled = true
+					rope.Color = BrickColor.new("Royal purple")
+					rope.Length = distance / 1
+					rope.Visible = true
+
+					local distance = (hook.Position - hrp.Position).Unit
+
+					while con and (hrp.Position - hook.Position).Magnitude > 1 do
+						hrp.CFrame = CFrame.new(hrp.Position + distance * 65 * run.RenderStepped:Wait())
+						hrp.CFrame = CFrame.lookAt(hrp.Position, hook.Position)
+
+						local currentD = between(hrp.Position, hook.Position)
+						rope.Length = currentD
+					end
+				else
+					print("Too far!")
+				end
+			else
+				if summoned then
+					con = true
+
+					local mPos = mouse.Hit.p
+
+					local ifBe = (hrp.Position - mPos).Magnitude
+					local distance = between(mPos, hrp.Position)
+
+					if ifBe <= max then
+
+						hook = Instance.new("Part")
+						hook.Anchored = true
+						hook.CanCollide = false
+						hook.Transparency = 1
+						hook.Position = mPos
+						hook.Parent = work
+
+						bmw = Instance.new("BodyVelocity")
+						bmw.Velocity = Vector3.new(0,0,0)
+						bmw.MaxForce = Vector3.new(100000,100000,100000)
+						bmw.Parent = hrp
+
+						attach(r15A)
+						attach(hook)
+
+						rope = Instance.new("RopeConstraint")
+						rope.Parent = hook
+						rope.Attachment0 = hook.att
+						rope.Attachment1 = r15A.att
+						rope.WinchEnabled = true
+						rope.Color = BrickColor.new("Royal purple")
+						rope.Length = distance / 1
+						rope.Visible = true
+
+						local distance = (hook.Position - hrp.Position).Unit
+
+						while con and (hrp.Position - hook.Position).Magnitude > 1 do
+							hrp.CFrame = CFrame.new(hrp.Position + distance * 65 * run.RenderStepped:Wait())
+							hrp.CFrame = CFrame.lookAt(hrp.Position, hook.Position)
+
+							local currentD = between(hrp.Position, hook.Position)
+							rope.Length = currentD
+						end
+					else
+						print("Too far!")
+					end
+				end
+			end
+		else
+			print("Stand is not summoned!")
+		end
+	end
+end)
+
+uis.InputEnded:Connect(function(i,g)
+	if g then return end
+	
+	if i.KeyCode == Enum.KeyCode.E then
+		keyHold = true
+		
+		con = false
+		if hook then
+			hook:Destroy()
+		end
+		if bmw then
+			bmw:Destroy()
+		end
+		if rope then
+			rope:Destroy()
+		end
+	end
+end)
