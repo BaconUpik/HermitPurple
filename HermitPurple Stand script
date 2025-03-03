@@ -1,3 +1,10 @@
+local summonKeybind = "Q"--Change hook activate keybind if needed
+local hookKeybind = "E"--Change hook activate keybind if needed
+
+
+
+
+
 local plr = game:GetService("Players")
 local me  = plr.LocalPlayer
 local hum = me.Character:WaitForChild("Humanoid")
@@ -60,6 +67,10 @@ local hermit
 
 local summoned = false
 
+me.CharacterAdded:Connect(function()
+	summoned = false
+end)
+
 local max = 200
 
 local function attach(parent)
@@ -102,7 +113,7 @@ wait(0.3)
 uis.InputBegan:Connect(function(i,g)
 	if g then return end
 
-	if i.KeyCode == Enum.KeyCode.Q then
+	if i.KeyCode == Enum.KeyCode[summonKeybind] then
 		summoned = not summoned
 		if summoned then
 			if ifR6 then
@@ -121,7 +132,7 @@ uis.InputBegan:Connect(function(i,g)
 				summon("destroy", r15La)
 			end
 		end
-	elseif i.KeyCode == Enum.KeyCode.E and keyHold then
+	elseif i.KeyCode == Enum.KeyCode[hookKeybind] and keyHold then
 		keyHold = false
 		if summoned then
 			if ifR6 then
@@ -228,7 +239,7 @@ end)
 uis.InputEnded:Connect(function(i,g)
 	if g then return end
 
-	if i.KeyCode == Enum.KeyCode.E then
+	if i.KeyCode == Enum.KeyCode[hookKeybind] then
 		keyHold = true
 
 		con = false
