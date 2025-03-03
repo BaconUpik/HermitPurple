@@ -146,13 +146,13 @@ uis.InputBegan:Connect(function(i,g)
 					bmw.MaxForce = Vector3.new(100000,100000,100000)
 					bmw.Parent = hrp
 
-					attach(r6A)
+					attach(hrp)
 					attach(hook)
 
 					rope = Instance.new("RopeConstraint")
 					rope.Parent = hook
 					rope.Attachment0 = hook.att
-					rope.Attachment1 = r6A.att
+					rope.Attachment1 = hrp.att
 					rope.WinchEnabled = true
 					rope.Color = BrickColor.new("Royal purple")
 					rope.Length = distance / 1
@@ -193,13 +193,13 @@ uis.InputBegan:Connect(function(i,g)
 						bmw.MaxForce = Vector3.new(100000,100000,100000)
 						bmw.Parent = hrp
 
-						attach(r15A)
+						attach(hrp)
 						attach(hook)
 
 						rope = Instance.new("RopeConstraint")
 						rope.Parent = hook
 						rope.Attachment0 = hook.att
-						rope.Attachment1 = r15A.att
+						rope.Attachment1 = hrp.att
 						rope.WinchEnabled = true
 						rope.Color = BrickColor.new("Royal purple")
 						rope.Length = distance / 1
