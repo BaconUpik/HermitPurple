@@ -1,5 +1,6 @@
 local summonKeybind = "Q"--Change hook activate keybind if needed
 local hookKeybind = "E"--Change hook activate keybind if needed
+local max = 200--Max hook distance, change if needed
 
 
 
@@ -70,8 +71,6 @@ local summoned = false
 me.CharacterAdded:Connect(function()
 	summoned = false
 end)
-
-local max = 200
 
 local function attach(parent)
 	local att = Instance.new("Attachment")
