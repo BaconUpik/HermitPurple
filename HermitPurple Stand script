@@ -48,7 +48,7 @@ end
 
 game:GetService("StarterGui"):SetCore("SendNotification",{
 	Title = "Hermit Purple",
-	Text  = "Q = summon/desummon\nHold E = grapple/Unhold E = ungrapple\nWarning! Script is NOT FE"
+	Text  = summonKeybind .. " = summon/desummon\nHold " .. hookKeybind .. "= grapple/Unhold ".. hookKeybind .. "= ungrapple\nWarning! Script is NOT FE"
 })
 
 local ifR6 = false
