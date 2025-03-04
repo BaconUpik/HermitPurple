@@ -1,6 +1,7 @@
 local summonKeybind = "Q"--Change hook activate keybind if needed
 local hookKeybind = "E"--Change hook activate keybind if needed
 local max = 200--Max hook distance, change if needed
+local MovingSpeed = 65--Moving to hook speed, change if needed
 
 
 
@@ -171,7 +172,7 @@ uis.InputBegan:Connect(function(i,g)
 					local distance = (hook.Position - hrp.Position).Unit
 
 					while con and (hrp.Position - hook.Position).Magnitude > 1 do
-						hrp.CFrame = CFrame.new(hrp.Position + distance * 65 * run.RenderStepped:Wait())
+						hrp.CFrame = CFrame.new(hrp.Position + distance * MovingSpeed * run.RenderStepped:Wait())
 						hrp.CFrame = CFrame.lookAt(hrp.Position, hook.Position)
 
 						local currentD = between(hrp.Position, hook.Position)
@@ -218,7 +219,7 @@ uis.InputBegan:Connect(function(i,g)
 						local distance = (hook.Position - hrp.Position).Unit
 
 						while con and (hrp.Position - hook.Position).Magnitude > 1 do
-							hrp.CFrame = CFrame.new(hrp.Position + distance * 65 * run.RenderStepped:Wait())
+							hrp.CFrame = CFrame.new(hrp.Position + distance * MovingSpeed * run.RenderStepped:Wait())
 							hrp.CFrame = CFrame.lookAt(hrp.Position, hook.Position)
 
 							local currentD = between(hrp.Position, hook.Position)
