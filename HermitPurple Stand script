@@ -1,5 +1,6 @@
 local summonKeybind = "Q"--Change hook activate keybind if needed
 local hookKeybind = "E"--Change hook activate keybind if needed
+local charge = "G"--Hamon charge keybind, change if needed.
 local max = 200--Max hook distance, change if needed
 local MovingSpeed = 65--Moving to hook speed, change if needed
 
@@ -48,8 +49,28 @@ end
 
 game:GetService("StarterGui"):SetCore("SendNotification",{
 	Title = "Hermit Purple",
-	Text  = summonKeybind .. " = summon/desummon\nHold " .. hookKeybind .. "= grapple/Unhold ".. hookKeybind .. "= ungrapple\nWarning! Script is NOT FE"
+	Text  = summonKeybind .. " = summon/desummon\nHold " .. hookKeybind .. "= grapple/Unhold ".. hookKeybind .. "= ungrapple\nhold "..charge.." to charge hamon.".."Warning! Script is NOT FE",
+	Duration = 10
 })
+
+local screen = Instance.new("ScreenGui")
+screen.Name = "Hamon"
+screen.Parent = me.PlayerGui
+screen.IgnoreGuiInset = true
+screen.ResetOnSpawn = false
+
+local frame = Instance.new("Frame")
+frame.Parent = screen
+frame.Position = UDim2.new(0.356,0,0.974,0)
+frame.Size = UDim2.new(0,389,0,9)
+frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
+
+local frame2 = Instance.new("Frame")
+frame2.Parent = frame
+frame2.Position = UDim2.new(-0.002,0,-0.026,0)
+frame2.Size = UDim2.new(0,9,0,9)
+frame2.BackgroundColor3 = Color3.fromRGB(255,235,0)
+frame2.BorderSizePixel = 0
 
 local ifR6 = false
 
@@ -64,10 +85,22 @@ local con = true
 local hook
 local bmw
 local rope
+local keyHold2 = true
+
+local chargeCon = false
+local unchargeCon = false
+
+local minSize = UDim2.new(0,9,0,9)
+local maxSize = UDim2.new(0,394,0,9)
+
+local newSize = 10
+local newSize2 = -10
 
 local hermit
 
 local summoned = false
+
+local hamon
 
 me.CharacterAdded:Connect(function()
 	summoned = false
@@ -233,6 +266,31 @@ uis.InputBegan:Connect(function(i,g)
 		else
 			print("Stand is not summoned!")
 		end
+	elseif i.KeyCode == Enum.KeyCode[charge] and keyHold2 then
+		keyHold2 = false
+		chargeCon = true
+		unchargeCon = false
+		
+		hamon = Instance.new("ParticleEmitter")
+		hamon.Parent = hrp
+		hamon.Name = "Hermit"
+		hamon.Rate = 120
+		hamon.Lifetime = NumberRange.new(1, 3)
+		hamon.Size = NumberSequence.new(0.5, 1)
+		hamon.Speed = NumberRange.new(1,2)
+		hamon.Color = ColorSequence.new(Color3.fromRGB(255, 235, 0))
+		hamon.Transparency = NumberSequence.new(0.5, 1)
+		hamon.Rotation = NumberRange.new(0, 360)
+		hamon.Enabled = true
+		
+		while chargeCon do
+			if frame2.Size.X.Offset + newSize >= maxSize.X.Offset then
+				chargeCon = false
+				break
+			end
+			frame2.Size = UDim2.new(0,frame2.Size.X.Offset + newSize,0,frame2.Size.Y.Offset)
+			wait(0.1)
+		end
 	end
 end)
 
@@ -251,6 +309,20 @@ uis.InputEnded:Connect(function(i,g)
 		end
 		if rope then
 			rope:Destroy()
+		end
+	elseif i.KeyCode == Enum.KeyCode[charge] then
+		unchargeCon = true
+		keyHold2 = true
+		chargeCon = false
+		
+		while unchargeCon do
+			if frame2.Size == minSize then
+				hamon:Destroy()
+				unchargeCon = false
+				break
+			end
+			frame2.Size = UDim2.new(0,frame2.Size.X.Offset + newSize2,0,frame2.Size.Y.Offset)
+			wait(0.1)
 		end
 	end
 end)
